@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 👇 Add this block */
-@theme {
-  --color-bg: #0B1020;
-  --color-panel: #0F162E;
-  --color-accent: #2EE59D;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-
-  /* for class: shadow-glow */
-  --shadow-glow: 0 0 20px rgba(46, 229, 157, 0.3);
-}
-
 :root {
   color-scheme: dark;
 }
@@ -27,11 +15,34 @@ body {
   font-feature-settings: "ss01","cv11";
 }
 
-a { @apply text-accent; }
-.card { @apply bg-panel/80 rounded-2xl shadow-glow border border-white/5; }
-.btn { @apply px-4 py-2 rounded-xl bg-accent/10 hover:bg-accent/20 border border-accent/40 transition; }
-.input { @apply bg-black/30 border border-white/10 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/50; }
-.badge { @apply text-xs px-2 py-0.5 rounded-full; }
-table { @apply w-full text-sm; }
-th, td { @apply px-3 py-2; }
-th { @apply text-white/60 font-medium; }
+a {
+  @apply text-accent;
+}
+
+.card {
+  @apply bg-panel/80 rounded-2xl shadow-glow border border-white/5;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-xl bg-accent/10 hover:bg-accent/20 border border-accent/40 transition;
+}
+
+.input {
+  @apply bg-black/30 border border-white/10 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/50;
+}
+
+.badge {
+  @apply text-xs px-2 py-0.5 rounded-full;
+}
+
+table {
+  @apply w-full text-sm;
+}
+
+th, td {
+  @apply px-3 py-2;
+}
+
+th {
+  @apply text-white/60 font-medium;
+}
