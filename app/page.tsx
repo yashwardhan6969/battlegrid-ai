@@ -1,4 +1,11 @@
 'use client';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
+
+
 import { useEffect, useState } from 'react';
 import Tabs from '@/components/Tabs';
 import MapView from '@/components/MapView';
