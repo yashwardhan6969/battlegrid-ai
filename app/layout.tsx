@@ -1,3 +1,6 @@
+'use client';
+export const dynamic = 'force-dynamic';
+
 import './globals.css';
 import type { Metadata } from 'next';
 
@@ -19,18 +22,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <div className="ml-auto flex items-center gap-3">
                 <OnlineIndicator />
-                <a className="btn" href="/manifest.webmanifest" target="_blank" rel="noreferrer">Install PWA</a>
+                <a className="btn" href="/manifest.webmanifest" target="_blank" rel="noreferrer">
+                  Install PWA
+                </a>
               </div>
             </div>
           </header>
           <main className="mx-auto max-w-7xl p-4">{children}</main>
-          <script dangerouslySetInnerHTML={{__html:`
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(()=>{});
-              });
-            }
-          `}} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+                  });
+                }
+              `
+            }}
+          />
         </div>
       </body>
     </html>
@@ -40,21 +49,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 function OnlineIndicator() {
   return (
     <span id="online-indicator" className="badge border border-white/10">
-      <script dangerouslySetInnerHTML={{__html:`
-        (function(){
-          const el = document.getElementById('online-indicator');
-          function set() {
-            if (!el) return;
-            const on = navigator.onLine;
-            el.textContent = on ? 'ONLINE' : 'OFFLINE';
-            el.style.background = on ? 'rgba(46,229,157,.15)' : 'rgba(239,68,68,.15)';
-            el.style.borderColor = on ? 'rgba(46,229,157,.4)' : 'rgba(239,68,68,.4)';
-          }
-          window.addEventListener('online', set);
-          window.addEventListener('offline', set);
-          set();
-        })();
-      `}}/>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function(){
+              const el = document.getElementById('online-indicator');
+              function set() {
+                if (!el) return;
+                const on = navigator.onLine;
+                el.textContent = on ? 'ONLINE' : 'OFFLINE';
+                el.style.background = on ? 'rgba(46,229,157,.15)' : 'rgba(239,68,68,.15)';
+                el.style.borderColor = on ? 'rgba(46,229,157,.4)' : 'rgba(239,68,68,.4)';
+              }
+              window.addEventListener('online', set);
+              window.addEventListener('offline', set);
+              set();
+            })();
+          `
+        }}
+      />
     </span>
   );
 }
