@@ -13,13 +13,12 @@ export default function MapView({ threats }: { threats: Threat[] }) {
   const [L, setLeaflet] = useState<any>(null);
   const [ready, setReady] = useState(false);
 
-  // Client-only import of leaflet + css
+  // Client-only import of leaflet JS (CSS is loaded via globals.css)
   useEffect(() => {
     let cancelled = false;
     (async () => {
       if (typeof window === 'undefined') return;
       const leafletMod = await import('leaflet');
-      await import('leaflet/dist/leaflet.css');
       if (!cancelled) {
         setLeaflet(leafletMod.default ?? leafletMod);
         setReady(true);
@@ -30,12 +29,10 @@ export default function MapView({ threats }: { threats: Threat[] }) {
 
   const center = useMemo(() => [23.5, 77.5] as [number, number], []);
 
-  // While Leaflet isn't loaded yet, show a placeholder box (avoids SSR/window issues)
   if (!ready || !L) {
     return <div className="h-[420px] rounded-2xl overflow-hidden bg-black/30 border border-white/10" />;
   }
 
-  // Helper to create a colored dot icon
   const icon = (color: string) => L.divIcon({
     className: '',
     html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};box-shadow:0 0 12px ${color};border:2px solid white"></div>`,
