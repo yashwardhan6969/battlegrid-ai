@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 👇 Add this block */
+@theme {
+  --color-bg: #0B1020;
+  --color-panel: #0F162E;
+  --color-accent: #2EE59D;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+
+  /* for class: shadow-glow */
+  --shadow-glow: 0 0 20px rgba(46, 229, 157, 0.3);
+}
+
 :root {
   color-scheme: dark;
 }
