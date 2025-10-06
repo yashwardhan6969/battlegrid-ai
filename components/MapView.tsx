@@ -3,26 +3,50 @@ import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useState } from 'react';
 import type { Threat } from '@/lib/types';
 
+// Load react-leaflet parts without SSR
 const MapContainer = dynamic(() => import('react-leaflet').then(m => m.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then(m => m.TileLayer), { ssr: false });
-const Marker = dynamic(() => import('react-leaflet').then(m => m.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then(m => m.Popup), { ssr: false });
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-
-const icon = (color: string) => L.divIcon({
-  className: '',
-  html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};box-shadow:0 0 12px ${color};border:2px solid white"></div>`,
-  iconSize: [16, 16]
-});
+const TileLayer    = dynamic(() => import('react-leaflet').then(m => m.TileLayer),    { ssr: false });
+const Marker       = dynamic(() => import('react-leaflet').then(m => m.Marker),       { ssr: false });
+const Popup        = dynamic(() => import('react-leaflet').then(m => m.Popup),        { ssr: false });
 
 export default function MapView({ threats }: { threats: Threat[] }) {
-  const center = useMemo(()=>[23.5, 77.5] as [number,number], []);
+  const [L, setLeaflet] = useState<any>(null);
+  const [ready, setReady] = useState(false);
+
+  // Client-only import of leaflet + css
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (typeof window === 'undefined') return;
+      const leafletMod = await import('leaflet');
+      await import('leaflet/dist/leaflet.css');
+      if (!cancelled) {
+        setLeaflet(leafletMod.default ?? leafletMod);
+        setReady(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const center = useMemo(() => [23.5, 77.5] as [number, number], []);
+
+  // While Leaflet isn't loaded yet, show a placeholder box (avoids SSR/window issues)
+  if (!ready || !L) {
+    return <div className="h-[420px] rounded-2xl overflow-hidden bg-black/30 border border-white/10" />;
+  }
+
+  // Helper to create a colored dot icon
+  const icon = (color: string) => L.divIcon({
+    className: '',
+    html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};box-shadow:0 0 12px ${color};border:2px solid white"></div>`,
+    iconSize: [16, 16]
+  });
+
   return (
     <div className="h-[420px] rounded-2xl overflow-hidden">
       <MapContainer center={center} zoom={5} scrollWheelZoom className="h-[420px]">
         <TileLayer
-          attribution='&copy; OpenStreetMap'
+          attribution="&copy; OpenStreetMap"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {threats.map(t => {
@@ -34,7 +58,7 @@ export default function MapView({ threats }: { threats: Threat[] }) {
                   <div className="font-semibold mb-1">Threat #{t.id.slice(-6)}</div>
                   <div>Type: {t.type}</div>
                   <div>Priority: {t.priority}</div>
-                  <div>Confidence: {(t.confidence*100).toFixed(0)}%</div>
+                  <div>Confidence: {(t.confidence * 100).toFixed(0)}%</div>
                   <div>Speed: {t.speedKts} kts, Heading: {t.heading}°</div>
                   <div>Lat/Lon: {t.lat.toFixed(4)}, {t.lon.toFixed(4)}</div>
                   {t.note ? <div className="mt-1 opacity-75">{t.note}</div> : null}
