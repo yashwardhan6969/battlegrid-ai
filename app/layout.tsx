@@ -2,14 +2,12 @@
 export const dynamic = 'force-dynamic';
 
 import './globals.css';
-import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'BattleGrid AI – MVP',
-  description: 'Indigenous Defense Command Platform – Prototype MVP'
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
