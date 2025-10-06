@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "latest",
     "autoprefixer": "latest",
     "dayjs": "latest",
     "leaflet": "latest",
